@@ -1,12 +1,14 @@
 package com.springboot.main.model;
 
+
+
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -19,16 +21,12 @@ public class Transaction {
 	private double oldPoints;
 	private double newPoints;
 	private String comments;
-	private LocalDate dateOfPurchase;
+	private LocalDate date;
 
 	@ManyToOne
-	@JoinColumn(name = "employee_id")
 	private Employee employee;
 	
-	@ManyToOne
-	@JoinColumn(name = "manager_id")
-	private Manager manager;
-
+	
 	public int getId() {
 		return id;
 	}
@@ -69,12 +67,14 @@ public class Transaction {
 		this.comments = comments;
 	}
 
-	public LocalDate getDateOfPurchase() {
-		return dateOfPurchase;
+	
+
+	public LocalDate getDate() {
+		return date;
 	}
 
-	public void setDateOfPurchase(LocalDate dateOfPurchase) {
-		this.dateOfPurchase = dateOfPurchase;
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public Employee getEmployee() {
@@ -85,12 +85,5 @@ public class Transaction {
 		this.employee = employee;
 	}
 
-	public Manager getManager() {
-		return manager;
-	}
-
-	public void setManager(Manager manager) {
-		this.manager = manager;
-	}
-
+	
 }

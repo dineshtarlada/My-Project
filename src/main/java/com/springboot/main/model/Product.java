@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Product {
@@ -15,8 +16,19 @@ public class Product {
 	private double points;
 	private String availability;
 
+	@ManyToOne
+	private Hr hr;
+
 	public int getId() {
 		return id;
+	}
+
+	public Hr getHr() {
+		return hr;
+	}
+
+	public void setHr(Hr hr) {
+		this.hr = hr;
 	}
 
 	public void setId(int id) {
