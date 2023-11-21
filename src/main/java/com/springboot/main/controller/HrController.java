@@ -32,8 +32,7 @@ public class HrController {
 
 	@Autowired
 	private UserService userService;
-	
-	
+
 	@Autowired
 	private EmployeeService employeeService;
 
@@ -104,11 +103,9 @@ public class HrController {
 		}
 	}
 
-	
-	
 	@GetMapping("/allemployees/{hid}")
 	public ResponseEntity<?> getEmployeesByManager(@PathVariable("hid") int hid) {
-		/* Fetch manager object using given mid */
+		/* Fetch hr object using given hid */
 		try {
 			Hr hr = hrService.getOne(hid);
 			List<Employee> list = employeeService.getEmployeesByHr(hid);
@@ -118,26 +115,5 @@ public class HrController {
 
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

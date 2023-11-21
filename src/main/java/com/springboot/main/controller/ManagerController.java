@@ -115,6 +115,9 @@ public class ManagerController {
 		}
 	}
 
+	//if manager wants to update his address then it will works
+	
+	
 	@PutMapping("/update/address/{id}")
 	public ResponseEntity<?> updateManagerAddress(@PathVariable("id") int id, @RequestBody Manager newManager) {
 		try {

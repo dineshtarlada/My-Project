@@ -33,6 +33,10 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeProductService employeeProductService;
 
+	
+	// if employee buys the multiple products then it calculates total products and total price.
+	//those products will be added into purchased products
+	
 	@PostMapping("/add/{eid}")
 	public ResponseEntity<?> purchaseProducts(@PathVariable("eid") int employeeId,
 			@RequestBody List<EmployeeProductDto> productsList) {

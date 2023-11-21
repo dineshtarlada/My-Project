@@ -189,9 +189,8 @@ public class EmployeeController {
 		}
 	}
 
-	
 	// it will fetches the products that are brought by employee
-	
+
 	@GetMapping("/purchasedproducts/all/{eid}")
 	public List<EmployeeProduct> getProductsByEmployee(@PathVariable("eid") int eid) {
 
@@ -199,7 +198,6 @@ public class EmployeeController {
 
 	}
 
-	
 	// it will returns the employee points
 	@GetMapping("/getpointsbalance/{eid}")
 	public ResponseEntity<?> getpointsbalanace(@PathVariable("eid") int eid) {

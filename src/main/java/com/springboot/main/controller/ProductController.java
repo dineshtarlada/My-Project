@@ -31,7 +31,7 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	// adding products in the database...
+	// adding products in the database by hr...
 
 	@PostMapping("/add/{hid}")
 	public ResponseEntity<?> postProduct(@RequestBody Product product, @PathVariable("hid") int hid) {
