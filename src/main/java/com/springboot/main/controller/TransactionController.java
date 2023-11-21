@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
-
+import com.springboot.main.model.Manager;
 import com.springboot.main.model.Transaction;
 import com.springboot.main.service.EmployeeService;
 
@@ -34,29 +34,6 @@ public class TransactionController {
 	private EmployeeService employeeService;
 
 	// inserting transaction details....
-
-	@PostMapping("/add/{eid}")
-	public ResponseEntity<?> insertTransaction(@PathVariable("eid") int eid, @RequestBody Transaction transaction) {
-
-		try {
-
-			// fetch the employee using eid.
-			Employee employee = employeeService.getById(eid);
-
-			// attach employee to transaction table
-			transaction.setEmployee(employee);
-
-			// save transaction info in database
-
-			transaction = transactionService.insertTransaction(transaction);
-
-			return ResponseEntity.ok().body(transaction);
-		} catch (InvalidIdException e) {
-
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-
-	}
 
 	// fetching all transactions using pagination...
 
@@ -84,7 +61,7 @@ public class TransactionController {
 	}
 
 	// deleting single transaction....
-	
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteTransaction(@PathVariable("id") int id) {
 
@@ -99,6 +76,21 @@ public class TransactionController {
 
 		} catch (InvalidIdException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	
+	// getting all transactions of employee 
+	@GetMapping("/all/{eid}")
+	public ResponseEntity<?> getTransactionsByEmployee(@PathVariable("eid") int eid) {
+		/* Fetch employee object using given eid */
+		try {
+			Employee employee = employeeService.getById(eid);
+			List<Transaction> list = transactionService.getTransactionsByEmployee(eid);
+			return ResponseEntity.ok().body(list);
+		} catch (InvalidIdException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+
 		}
 	}
 

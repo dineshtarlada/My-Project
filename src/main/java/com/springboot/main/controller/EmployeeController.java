@@ -18,16 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.main.dto.EmployeeDto;
+import com.springboot.main.enums.RoleType;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Address;
 import com.springboot.main.model.Employee;
 import com.springboot.main.model.EmployeeProduct;
+import com.springboot.main.model.Hr;
 import com.springboot.main.model.Manager;
-import com.springboot.main.model.Product;
 import com.springboot.main.model.User;
 import com.springboot.main.service.AddressService;
 import com.springboot.main.service.EmployeeProductService;
 import com.springboot.main.service.EmployeeService;
+import com.springboot.main.service.HrService;
 import com.springboot.main.service.ManagerService;
 import com.springboot.main.service.ProductService;
 import com.springboot.main.service.UserService;
@@ -46,7 +48,7 @@ public class EmployeeController {
 	private AddressService addressService;
 
 	@Autowired
-	private ManagerService managerService;
+	private HrService hrService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -57,14 +59,14 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeProductService employeeProductService;
 
-	@PostMapping("/address/add/{mid}")
-	public ResponseEntity<?> insertEmployee(@PathVariable("mid") int mid, @RequestBody Employee employee) {
+	@PostMapping("/address/add/{hid}")
+	public ResponseEntity<?> insertEmployee(@PathVariable("hid") int hid, @RequestBody Employee employee) {
 		// save user info in db
 
 		try {
 
-			Manager manager = managerService.getById(mid);
-			employee.setManager(manager);
+			Hr hr = hrService.getOne(hid);
+			employee.setHr(hr);
 
 			User user = employee.getUser();
 			// i am encrypting the password
@@ -73,7 +75,7 @@ public class EmployeeController {
 			String encodedPassword = passwordEncoder.encode(passwordPlain);
 			user.setPassword(encodedPassword);
 
-			user.setRole("EMPLOYEE");
+			user.setRole(RoleType.EMPLOYEE);
 			user = userService.insert(user);
 			// attach the saved user(in step 1)
 			employee.setUser(user);
@@ -158,11 +160,12 @@ public class EmployeeController {
 
 	}
 
-	@PutMapping("/update/address/{id}")
-	public ResponseEntity<?> updateEmployeeAddress(@PathVariable("id") int id, @RequestBody Employee newEmployee) {
+	// it will upadate the address of employee
+	@PutMapping("/update/address/{eid}")
+	public ResponseEntity<?> updateEmployeeAddress(@PathVariable("eid") int eid, @RequestBody Employee newEmployee) {
 		try {
 			// validate id
-			Employee oldEmployee = employeeService.getById(id);
+			Employee oldEmployee = employeeService.getById(eid);
 
 			Address newAddress = newEmployee.getAddress();
 
@@ -186,43 +189,29 @@ public class EmployeeController {
 		}
 	}
 
-	@GetMapping("/all/{mid}")
-	public ResponseEntity<?> getEmployeesByManager(@PathVariable("mid") int mid) {
-		/* Fetch manager object using given mid */
-		try {
-			Manager manager = managerService.getById(mid);
-			List<Employee> list = employeeService.getEmployeesByManager(mid);
-			return ResponseEntity.ok().body(list);
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+	
+	// it will fetches the products that are brought by employee
+	
+	@GetMapping("/purchasedproducts/all/{eid}")
+	public List<EmployeeProduct> getProductsByEmployee(@PathVariable("eid") int eid) {
 
-		}
+		return employeeService.getPurchasedProductsByEmployee(eid);
+
 	}
 
-	@PostMapping("/project/add/{eid}/{pid}")
-	public ResponseEntity<?> PurchasedProducts(@PathVariable("eid") int eid, @PathVariable("pid") int pid,
-			@RequestBody EmployeeProduct employeeProduct) {
+	
+	// it will returns the employee points
+	@GetMapping("/getpointsbalance/{eid}")
+	public ResponseEntity<?> getpointsbalanace(@PathVariable("eid") int eid) {
 
 		try {
-
-			// step-1:
 			Employee employee = employeeService.getById(eid);
-
-			// step-2:
-			Product product = productService.getById(pid);
-
-			// step-3:
-			employeeProduct.setEmployee(employee);
-
-			employeeProduct.setProduct(product);
-
-			// step:4
-			employeeProduct = employeeProductService.insert(employeeProduct);
-			return ResponseEntity.ok().body(employeeProduct);
-
+			double pointsBalance = employeeService.getpointsbalanace(eid);
+			return ResponseEntity.ok().body(pointsBalance);
 		} catch (InvalidIdException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
+
 	}
 
 }

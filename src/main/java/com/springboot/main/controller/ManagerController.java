@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.springboot.main.enums.RoleType;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Address;
-
+import com.springboot.main.model.Employee;
 import com.springboot.main.model.Manager;
 import com.springboot.main.model.User;
 import com.springboot.main.service.AddressService;
+import com.springboot.main.service.EmployeeService;
 import com.springboot.main.service.ManagerService;
 import com.springboot.main.service.UserService;
 
@@ -42,6 +43,9 @@ public class ManagerController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private EmployeeService employeeService;
 
 	// Adding manager details to database....
 	@PostMapping("/address/add")
@@ -54,7 +58,7 @@ public class ManagerController {
 		String encodedPassword = passwordEncoder.encode(passwordPlain);
 		user.setPassword(encodedPassword);
 
-		user.setRole("MANAGER");
+		user.setRole(RoleType.MANAGER);
 		user = userService.insert(user);
 		// attach the saved user(in step 1)
 		manager.setUser(user);
@@ -111,7 +115,7 @@ public class ManagerController {
 		}
 	}
 
-@PutMapping("/update/address/{id}")
+	@PutMapping("/update/address/{id}")
 	public ResponseEntity<?> updateManagerAddress(@PathVariable("id") int id, @RequestBody Manager newManager) {
 		try {
 			// validate id
@@ -138,6 +142,5 @@ public class ManagerController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
-
+	
 }
