@@ -30,9 +30,23 @@ public class Employee {
 	@JoinColumn(name = "address_id")
 	private Address address;
 	
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+
 	@ManyToOne
     @JoinColumn(name = "hr_id")
     private Hr hr;
+	
+	@ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+	
+	
 	
 
 	public int getId() {

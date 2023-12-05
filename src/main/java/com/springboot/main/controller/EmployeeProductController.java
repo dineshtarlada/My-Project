@@ -1,12 +1,13 @@
 package com.springboot.main.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +18,13 @@ import com.springboot.main.dto.EmployeeProductDto;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
 import com.springboot.main.model.EmployeeProduct;
-
 import com.springboot.main.model.Product;
 import com.springboot.main.service.EmployeeProductService;
 import com.springboot.main.service.EmployeeService;
 import com.springboot.main.service.ProductService;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping("/purchasedproducts")
 public class EmployeeProductController {
 	@Autowired
@@ -54,6 +55,7 @@ public class EmployeeProductController {
 
 				employeeProduct.setProductname(product.getName());
 				employeeProduct.setProductprice(product.getPoints());
+				employeeProduct.setDateOfPurchase(LocalDate.now());
 
 				totalProducts += 1;
 				totalPrice += product.getPoints();

@@ -1,5 +1,6 @@
 package com.springboot.main.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,10 +38,13 @@ import com.springboot.main.service.UserService;
 
 @RestController
 @RequestMapping("/employees")
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private ManagerService managerService;
 
 	@Autowired
 	private UserService userService;
@@ -59,14 +64,16 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeProductService employeeProductService;
 
-	@PostMapping("/address/add/{hid}")
-	public ResponseEntity<?> insertEmployee(@PathVariable("hid") int hid, @RequestBody Employee employee) {
+	@PostMapping("/address/add/{hid}/{mid}")
+	public ResponseEntity<?> insertEmployee(@PathVariable("hid") int hid,@PathVariable("mid") int mid, @RequestBody Employee employee) {
 		// save user info in db
 
 		try {
 
 			Hr hr = hrService.getOne(hid);
 			employee.setHr(hr);
+			Manager manager = managerService.getById(mid);
+			employee.setManager(manager);
 
 			User user = employee.getUser();
 			// i am encrypting the password
@@ -211,5 +218,43 @@ public class EmployeeController {
 		}
 
 	}
+	
+	
+	@GetMapping("/{date}")
+	public List<Employee> getEmployeesByDateOfPurchase(@PathVariable("date") LocalDate date){
+	return employeeService.getEmployeesByDateOfPurchase(date);
+	
+	}
+	
+	
+
+	@GetMapping("/leaderboard")
+	public List<Employee> getEmployeesByPointsBalance(){
+	return employeeService.getEmployeesByPointsBalance();
+	
+	}
+	
+	
+	@GetMapping("user/{uid}")
+	public Employee getEmployeeByUserId(@PathVariable("uid") int uid) {
+		return employeeService.getEmployeeByUserId(uid);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

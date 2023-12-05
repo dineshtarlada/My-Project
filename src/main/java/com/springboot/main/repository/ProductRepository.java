@@ -10,6 +10,9 @@ import com.springboot.main.model.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+	@Query("select p from Product p where p.name LIKE %?1%")
+	List<Product> searchProductByName(String qStr);
+
 
 	
 

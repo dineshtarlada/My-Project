@@ -1,5 +1,6 @@
 package com.springboot.main.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
 import com.springboot.main.model.EmployeeProduct;
-import com.springboot.main.model.Transaction;
 import com.springboot.main.repository.EmployeeRepository;
 
 @Service
@@ -51,11 +51,12 @@ public class EmployeeService {
 
 		return employeeRepository.findByTheEmployeeId(eid);
 	}
+	
 
 	public void employeeTransferPoints(int fromEmployeeId, int toEmployeeId, double pointsToTransfer)
 			throws InvalidIdException {
 
-		Employee fromEmployee = getById(fromEmployeeId);
+		Employee fromEmployee = getEmployeeByUserId(fromEmployeeId);
 		Employee toEmployee = getById(toEmployeeId);
 
 		// Perform points transfer logic
@@ -75,5 +76,25 @@ public class EmployeeService {
 		// TODO Auto-generated method stub
 		return employeeRepository.getpointsbalanace(eid);
 	}
+
+public List<Employee> getEmployeesByDateOfPurchase(LocalDate date) {
+		
+		return employeeRepository.getEmployeesByDateOfPurchase(date);
+	}
+
+public List<Employee> getEmployeesByPointsBalance() {
+	
+	return employeeRepository.getEmployeesByPointsBalance();
+}
+
+public Employee getEmployeeByUserId(int uid) {
+	// TODO Auto-generated method stub
+	return employeeRepository.getEmployeeByUserId(uid);
+}
+
+public  List<Employee> getEmployeesByManagerId(int muid) {
+	// TODO Auto-generated method stub
+	return employeeRepository.getEmployeesByManagerId(muid);
+}
 
 }

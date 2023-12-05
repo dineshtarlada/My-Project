@@ -1,5 +1,6 @@
 package com.springboot.main.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -31,7 +34,6 @@ public class EmployeeProduct {
 		this.productname = productname;
 	}
 
-	
 	public double getProductprice() {
 		return productprice;
 	}
@@ -40,11 +42,11 @@ public class EmployeeProduct {
 		this.productprice = productprice;
 	}
 
-	public Date getDateOfPurchase() {
+	public LocalDate getDateOfPurchase() {
 		return dateOfPurchase;
 	}
 
-	public void setDateOfPurchase(Date dateOfPurchase) {
+	public void setDateOfPurchase(LocalDate dateOfPurchase) {
 		this.dateOfPurchase = dateOfPurchase;
 	}
 
@@ -54,10 +56,9 @@ public class EmployeeProduct {
 	@ManyToOne
 	private Product product;
 
-	@CreationTimestamp
-
 	@Column(name = "date_of_purchase", nullable = false, updatable = false)
-	private Date dateOfPurchase;
+
+	private LocalDate dateOfPurchase;
 
 	public int getId() {
 		return id;

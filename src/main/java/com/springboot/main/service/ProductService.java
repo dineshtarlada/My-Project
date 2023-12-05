@@ -42,6 +42,11 @@ public class ProductService {
 		return optional.get();
 	}
 
+	public List<Product> searchProductByName(String qStr) {
+		// TODO Auto-generated method stub
+		return productRepository.searchProductByName(qStr);
+	}
+
 	
 	
 }

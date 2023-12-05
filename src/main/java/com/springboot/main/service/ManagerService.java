@@ -53,10 +53,11 @@ public class ManagerService {
 		return optional.get();
 	}
 
+
 	public void managerTransferPoints(int mid, int eid, double pointsToTransfer, String comments)
 			throws InvalidIdException {
 
-		Manager manager = getById(mid);
+		Manager manager = getManagerByUserId(mid);
 		Employee employee = employeeService.getById(eid);
 
 		if (employee == null) {
@@ -75,8 +76,14 @@ public class ManagerService {
 		transaction.setComments(comments);
 		
 		transaction.setEmployee(employee);
+		transaction.setManager(manager);
 
 		transactionRepository.save(transaction);
 
+	}
+
+	public Manager getManagerByUserId(int uid) {
+		// TODO Auto-generated method stub
+		return managerRepository.getManagerByUserId(uid) ;
 	}
 }

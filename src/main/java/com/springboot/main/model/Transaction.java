@@ -30,6 +30,9 @@ public class Transaction {
 
 	@ManyToOne
 	private Employee employee;
+	
+	@ManyToOne
+	private Manager manager;
 
 	public int getId() {
 		return id;
@@ -85,6 +88,14 @@ public class Transaction {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
 }
