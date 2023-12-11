@@ -15,6 +15,8 @@ public class Product {
 	private String name;
 	private double points;
 	private String availability;
+	
+	private String image;
 
 	@ManyToOne
 	private Hr hr;
@@ -49,6 +51,14 @@ public class Product {
 
 	public void setPoints(double points) {
 		this.points = points;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getAvailability() {

@@ -22,9 +22,20 @@ public class Employee {
 	private String phone;
 	private LocalDate dateofBirth;
 	private double pointsBalance;
+	
+	@OneToOne
+	private EmployeeHistory employeeHistory;
 
 	@OneToOne
 	private User user;
+
+	public EmployeeHistory getEmployeeHistory() {
+		return employeeHistory;
+	}
+
+	public void setEmployeeHistory(EmployeeHistory employeeHistory) {
+		this.employeeHistory = employeeHistory;
+	}
 
 	@OneToOne
 	@JoinColumn(name = "address_id")

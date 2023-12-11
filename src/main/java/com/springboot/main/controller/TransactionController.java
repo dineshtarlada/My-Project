@@ -2,9 +2,11 @@ package com.springboot.main.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,17 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
+import com.springboot.main.model.EmployeeHistory;
+import com.springboot.main.model.Manager;
 import com.springboot.main.model.Transaction;
 import com.springboot.main.service.EmployeeService;
+import com.springboot.main.service.ManagerService;
 import com.springboot.main.service.TransactionService;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping("/transaction")
 public class TransactionController {
+	
+	@Autowired
+	private Logger logger;
 
 	@Autowired
 	private TransactionService transactionService;
+	
+	@Autowired
+	private ManagerService managerService;
 
 	@Autowired
 	private EmployeeService employeeService;
@@ -51,9 +62,11 @@ public class TransactionController {
 
 		try {
 			Transaction transaction = transactionService.getById(id);
+			logger.info("transaction is retreived and transaction id:"+transaction.getId() );
 			return ResponseEntity.ok().body(transaction);
 		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			 logger.error("issue in retrieving the transaction id"  );
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("transaction error..");
 		}
 
 	}
@@ -79,17 +92,23 @@ public class TransactionController {
 
 	
 	// getting all transactions of employee 
-	@GetMapping("/all/{eid}")
-	public ResponseEntity<?> getTransactionsByEmployee(@PathVariable("eid") int eid) {
+	@GetMapping("/manager/all/{mid}")
+	public List<Transaction> getTransactionsByManager(@PathVariable("mid") int mid) {
 		/* Fetch employee object using given eid */
-		try {
-			Employee employee = employeeService.getById(eid);
-			List<Transaction> list = transactionService.getTransactionsByEmployee(eid);
-			return ResponseEntity.ok().body(list);
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-
-		}
+		
+			
+			 return transactionService.getTransactionsByManager(mid);
+			
 	}
+	
+	@GetMapping("/employee/all/{eid}")
+	public List<Transaction> getTransactionsByEmployee(@PathVariable("eid") int eid) {
+		/* Fetch employee object using given eid */
+		
+			
+			 return transactionService.getTransactionsByEmployee(eid);
+			
+	}
+	
 
 }

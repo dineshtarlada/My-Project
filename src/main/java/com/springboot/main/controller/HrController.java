@@ -105,16 +105,16 @@ public class HrController {
 	}
 
 	@GetMapping("/allemployees/{hid}")
-	public ResponseEntity<?> getEmployeesByManager(@PathVariable("hid") int hid) {
+	public List<Employee> getEmployeesByHr(@PathVariable("hid") int hid) {
 		/* Fetch hr object using given hid */
-		try {
-			Hr hr = hrService.getOne(hid);
-			List<Employee> list = employeeService.getEmployeesByHr(hid);
-			return ResponseEntity.ok().body(list);
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-
-		}
+		
+			 return employeeService.getEmployeesByHr(hid);
+			
 	}
+	@GetMapping("user/{uid}")
+	public Hr getHrByUserId(@PathVariable("uid") int uid) {
+		return hrService.getHrByUserId(uid);
+	}
+	
 
 }

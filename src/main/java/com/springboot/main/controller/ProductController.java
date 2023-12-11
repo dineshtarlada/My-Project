@@ -38,16 +38,13 @@ public class ProductController {
 	@PostMapping("/add/{hid}")
 	public ResponseEntity<?> postProduct(@RequestBody Product product, @PathVariable("hid") int hid) {
 		/* Fetch Hr object from db using hid */
-		try {
-			Hr hr = hrService.getOne(hid);
+		
+			Hr hr = hrService.getHrByUserId(hid);
 			/* Attach Hr to product */
 			product.setHr(hr);
 			/* Save the product in the DB */
 			product = productService.postProduct(product);
 			return ResponseEntity.ok().body(product);
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
 	}
 
 	// fetching all products from database...

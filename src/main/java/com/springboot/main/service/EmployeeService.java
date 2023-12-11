@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
+import com.springboot.main.model.EmployeeHistory;
 import com.springboot.main.model.EmployeeProduct;
+import com.springboot.main.repository.EmployeeHistoryRepository;
 import com.springboot.main.repository.EmployeeRepository;
 
 @Service
@@ -18,6 +20,10 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private EmployeeHistoryRepository employeeHistoryRepository;
+	
 
 	public Employee insert(Employee employee) {
 
@@ -49,7 +55,7 @@ public class EmployeeService {
 
 	public List<EmployeeProduct> getPurchasedProductsByEmployee(int eid) {
 
-		return employeeRepository.findByTheEmployeeId(eid);
+		return employeeRepository.getPurchasedProductsByEmployee(eid);
 	}
 	
 
@@ -58,14 +64,26 @@ public class EmployeeService {
 
 		Employee fromEmployee = getEmployeeByUserId(fromEmployeeId);
 		Employee toEmployee = getById(toEmployeeId);
+		EmployeeHistory employeeHistory=new EmployeeHistory();
+
+		
 
 		// Perform points transfer logic
 		if (fromEmployee.getPointsBalance() >= pointsToTransfer) {
 			fromEmployee.setPointsBalance(fromEmployee.getPointsBalance() - pointsToTransfer);
 			toEmployee.setPointsBalance(toEmployee.getPointsBalance() + pointsToTransfer);
 
-			employeeRepository.save(fromEmployee);
+			
 			employeeRepository.save(toEmployee);
+			employeeHistory.setEmployeeName(toEmployee.getName());
+			employeeHistory.setTransferredpoints(pointsToTransfer);
+			employeeHistory.setDateoftransfer(LocalDate.now());
+			employeeHistory.setEmployee(fromEmployee);
+			employeeHistory=employeeHistoryRepository.save(employeeHistory);
+			
+			employeeRepository.save(fromEmployee);
+			
+			
 		} else {
 			throw new InvalidIdException("Insufficient points for transfer");
 		}
@@ -95,6 +113,16 @@ public Employee getEmployeeByUserId(int uid) {
 public  List<Employee> getEmployeesByManagerId(int muid) {
 	// TODO Auto-generated method stub
 	return employeeRepository.getEmployeesByManagerId(muid);
+}
+
+public List<Employee> getEmployeesWithoutThisUserId(int uid) {
+	// TODO Auto-generated method stub
+	return employeeRepository.getEmployeesWithoutThisUserId(uid);
+}
+
+public List<EmployeeHistory> getTransactions(int uid) {
+	// TODO Auto-generated method stub
+	return employeeRepository.getTransactions(uid);
 }
 
 }

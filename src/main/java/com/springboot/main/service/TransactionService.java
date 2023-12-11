@@ -50,6 +50,12 @@ public class TransactionService {
 		return transactionRepository.getTransactionsByEmployee(eid);
 	}
 
+	public List<Transaction> getTransactionsByManager(int mid) {
+		// TODO Auto-generated method stub
+		return transactionRepository.getTransactionsByManager(mid);
+	}
+
+	
 
 
 }

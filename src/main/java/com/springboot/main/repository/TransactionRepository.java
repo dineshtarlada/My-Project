@@ -14,7 +14,10 @@ import com.springboot.main.model.Transaction;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 
-	@Query("select t from Transaction t where t.employee.id=?1")
+	@Query("select t from Transaction t join Employee e on t.employee.id=e.id join User u on e.user.id=u.id where u.id =?1")
 	List<Transaction> getTransactionsByEmployee(int eid);
+
+	@Query("select t from Transaction t join Manager m on t.manager.id=m.id join User u on m.user.id=u.id where u.id =?1")
+	List<Transaction> getTransactionsByManager(int mid);
 
 }

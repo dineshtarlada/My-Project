@@ -1,5 +1,6 @@
 package com.springboot.main.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +75,8 @@ public class ManagerService {
 		transaction.setOldPoints(oldPoints);
 		transaction.setNewPoints(newPoints);
 		transaction.setComments(comments);
+		transaction.setEmployeeName(employee.getName());
+		transaction.setDate(LocalDate.now());
 		
 		transaction.setEmployee(employee);
 		transaction.setManager(manager);
@@ -86,4 +89,6 @@ public class ManagerService {
 		// TODO Auto-generated method stub
 		return managerRepository.getManagerByUserId(uid) ;
 	}
+
+	
 }

@@ -157,4 +157,18 @@ public class ManagerController {
 		return managerService.getManagerByUserId(uid);
 	}
 	
+	
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

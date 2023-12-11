@@ -1,5 +1,6 @@
 package com.springboot.main.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -23,16 +24,18 @@ public class Transaction {
 	private double newPoints;
 	private String comments;
 
-	@CreationTimestamp
-
-	@Column(name = "transaction_date", nullable = false, updatable = false)
-	private Date date;
+	
+	private LocalDate date;
 
 	@ManyToOne
 	private Employee employee;
 	
+	
+	
 	@ManyToOne
 	private Manager manager;
+	
+	private String EmployeeName;
 
 	public int getId() {
 		return id;
@@ -66,6 +69,14 @@ public class Transaction {
 		this.newPoints = newPoints;
 	}
 
+	public String getEmployeeName() {
+		return EmployeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		EmployeeName = employeeName;
+	}
+
 	public String getComments() {
 		return comments;
 	}
@@ -74,11 +85,13 @@ public class Transaction {
 		this.comments = comments;
 	}
 
-	public Date getDate() {
+	
+
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

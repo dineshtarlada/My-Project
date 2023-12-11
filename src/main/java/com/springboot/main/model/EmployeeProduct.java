@@ -25,6 +25,8 @@ public class EmployeeProduct {
 
 	private String productname;
 	private double productprice;
+	
+	private String productimage;
 
 	public String getProductname() {
 		return productname;
@@ -48,6 +50,14 @@ public class EmployeeProduct {
 
 	public void setDateOfPurchase(LocalDate dateOfPurchase) {
 		this.dateOfPurchase = dateOfPurchase;
+	}
+
+	public String getProductimage() {
+		return productimage;
+	}
+
+	public void setProductimage(String productimage) {
+		this.productimage = productimage;
 	}
 
 	@ManyToOne

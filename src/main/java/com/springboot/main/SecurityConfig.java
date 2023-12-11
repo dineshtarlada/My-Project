@@ -1,5 +1,7 @@
 package com.springboot.main;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,5 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//from here..iwnt spring to go to my db and fetch users
 		dao.setUserDetailsService(userService);//UserDetailsService:UserService
 		return dao;
+	}
+
+	@Bean
+	public Logger getLogger() {
+		return LoggerFactory.getLogger("records");
 	}
 }

@@ -24,11 +24,13 @@ import com.springboot.main.enums.RoleType;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Address;
 import com.springboot.main.model.Employee;
+import com.springboot.main.model.EmployeeHistory;
 import com.springboot.main.model.EmployeeProduct;
 import com.springboot.main.model.Hr;
 import com.springboot.main.model.Manager;
 import com.springboot.main.model.User;
 import com.springboot.main.service.AddressService;
+import com.springboot.main.service.EmployeeHistoryService;
 import com.springboot.main.service.EmployeeProductService;
 import com.springboot.main.service.EmployeeService;
 import com.springboot.main.service.HrService;
@@ -43,6 +45,11 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private EmployeeHistoryService employeeHistoryService;
+
+	
 	@Autowired
 	private ManagerService managerService;
 
@@ -70,7 +77,7 @@ public class EmployeeController {
 
 		try {
 
-			Hr hr = hrService.getOne(hid);
+			Hr hr = hrService.getHrByUserId(hid);
 			employee.setHr(hr);
 			Manager manager = managerService.getById(mid);
 			employee.setManager(manager);
@@ -149,21 +156,16 @@ public class EmployeeController {
 	@PutMapping("/update/{id}")
 
 	// :update: which record to update? give me new value for update
-	public ResponseEntity<?> updateEmployee(@PathVariable("id") int id, @RequestBody EmployeeDto newEmployee) {
-		try {
-			// validate id
-			Employee oldEmployee = employeeService.getById(id);
-			if (newEmployee.getName() != null)
-				oldEmployee.setName(newEmployee.getName());
-			if (newEmployee.getPhone() != null)
-				oldEmployee.setPhone(newEmployee.getPhone());
+	public ResponseEntity<?> updateEmployee(@PathVariable("id") int id, @RequestBody EmployeeDto newEmployee) throws InvalidIdException {
+		// validate id
+		Employee oldEmployee = employeeService.getEmployeeByUserId(id);
+		if (newEmployee.getName() != null)
+			oldEmployee.setName(newEmployee.getName());
+		if (newEmployee.getPhone() != null)
+			oldEmployee.setPhone(newEmployee.getPhone());
 
-			oldEmployee = employeeService.insert(oldEmployee);
-			return ResponseEntity.ok().body(oldEmployee);
-
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+		oldEmployee = employeeService.insert(oldEmployee);
+		return ResponseEntity.ok().body(oldEmployee);
 
 	}
 
@@ -199,8 +201,9 @@ public class EmployeeController {
 	// it will fetches the products that are brought by employee
 
 	@GetMapping("/purchasedproducts/all/{eid}")
-	public List<EmployeeProduct> getProductsByEmployee(@PathVariable("eid") int eid) {
-
+	public List<EmployeeProduct> getProductsByEmployeeByUserId(@PathVariable("eid") int eid) {
+  
+		
 		return employeeService.getPurchasedProductsByEmployee(eid);
 
 	}
@@ -241,15 +244,38 @@ public class EmployeeController {
 	}
 	
 	
+	@GetMapping("/all/withoutThisUserId/{uid}")
+	public List<Employee> getEmployeesWithoutThisUserId(@PathVariable("uid") int uid){
+		return employeeService.getEmployeesWithoutThisUserId(uid);
+	}
 	
 	
+	@GetMapping("all/history/{uid}")
+	public List<EmployeeHistory> getTransactions(@PathVariable("uid") int uid){
+		
+		
+		return employeeService.getTransactions(uid);
+		
+		
+	}
+	
+	@DeleteMapping("history/delete/{historyId}")
+	public ResponseEntity<?> DeleteHistoryById(@PathVariable("historyId") int historyId)
+	{
+		try {
+		EmployeeHistory employeeHistory=employeeHistoryService.getById(historyId);
+		employeeHistoryService.DeleteHistoryById(employeeHistory);
+		return ResponseEntity.ok().body("record deleted successfully");
+	}
+	catch(Exception e)
+		{
+		return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	
+	}
 	
 	
-	
-	
-	
-	
-	
+
 	
 	
 	

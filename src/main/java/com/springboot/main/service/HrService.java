@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.main.exception.InvalidIdException;
+import com.springboot.main.model.Employee;
 import com.springboot.main.model.Hr;
 import com.springboot.main.repository.HrRepository;
 
@@ -39,6 +40,12 @@ public class HrService {
 
 		hrRepository.delete(hr);
 	}
+
+	public Hr getHrByUserId(int uid) {
+		// TODO Auto-generated method stub
+		return hrRepository.getHrByUserId(uid);
+	}
+
 
 	
 }

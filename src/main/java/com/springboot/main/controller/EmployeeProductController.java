@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.main.dto.EmployeeProductDto;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Employee;
+import com.springboot.main.model.EmployeeHistory;
 import com.springboot.main.model.EmployeeProduct;
 import com.springboot.main.model.Product;
 import com.springboot.main.service.EmployeeProductService;
@@ -42,9 +45,13 @@ public class EmployeeProductController {
 	public ResponseEntity<?> purchaseProducts(@PathVariable("eid") int employeeId,
 			@RequestBody List<EmployeeProductDto> productsList) {
 		try {
-			Employee employee = employeeService.getById(employeeId);
+			Employee employee = employeeService.getEmployeeByUserId(employeeId);
 			double totalPrice = 0;
 			double totalProducts = 0;
+			double oldpoints=employee.getPointsBalance();
+			double newpoints=0;
+			
+			
 
 			for (EmployeeProductDto employeeproductDto : productsList) {
 				Product product = productService.getById(employeeproductDto.getProductId());
@@ -56,12 +63,16 @@ public class EmployeeProductController {
 				employeeProduct.setProductname(product.getName());
 				employeeProduct.setProductprice(product.getPoints());
 				employeeProduct.setDateOfPurchase(LocalDate.now());
+				employeeProduct.setProductimage(product.getImage());
 
 				totalProducts += 1;
 				totalPrice += product.getPoints();
-
+				newpoints=oldpoints-totalPrice;
+				
+				employee.setPointsBalance(newpoints);
 				employeeProductService.insert(employeeProduct);
 			}
+			
 
 			Map<String, Object> response = new HashMap<>();
 
@@ -74,5 +85,45 @@ public class EmployeeProductController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@GetMapping("/getone/{id}")
+	public ResponseEntity<?> getById(@PathVariable("id") int id) {
+
+		try {
+			EmployeeProduct employeeProduct = employeeProductService.getById(id);
+			return ResponseEntity.ok().body(employeeProduct);
+		} catch (InvalidIdException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
+	}
+	
+	
+	@DeleteMapping("/delete/{cartid}")
+	public ResponseEntity<?> DeleteCartById(@PathVariable("cartid") int cartid)
+	{
+		try {
+			EmployeeProduct employeeProduct=employeeProductService.getById(cartid);
+		employeeProductService.DeleteCartById(employeeProduct);
+		return ResponseEntity.ok().body("record deleted successfully");
+	}
+	catch(Exception e)
+		{
+		return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
