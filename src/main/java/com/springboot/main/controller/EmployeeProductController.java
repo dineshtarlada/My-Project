@@ -27,7 +27,7 @@ import com.springboot.main.service.EmployeeService;
 import com.springboot.main.service.ProductService;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RequestMapping("/purchasedproducts")
 public class EmployeeProductController {
 	@Autowired
@@ -37,10 +37,10 @@ public class EmployeeProductController {
 	@Autowired
 	private EmployeeProductService employeeProductService;
 
-	
-	// if employee buys the multiple products then it calculates total products and total price.
-	//those products will be added into purchased products
-	
+	// if employee buys the multiple products then it calculates total products and
+	// total price.
+	// those products will be added into purchased products
+
 	@PostMapping("/add/{eid}")
 	public ResponseEntity<?> purchaseProducts(@PathVariable("eid") int employeeId,
 			@RequestBody List<EmployeeProductDto> productsList) {
@@ -48,10 +48,8 @@ public class EmployeeProductController {
 			Employee employee = employeeService.getEmployeeByUserId(employeeId);
 			double totalPrice = 0;
 			double totalProducts = 0;
-			double oldpoints=employee.getPointsBalance();
-			double newpoints=0;
-			
-			
+			double oldpoints = employee.getPointsBalance();
+			double newpoints = 0;
 
 			for (EmployeeProductDto employeeproductDto : productsList) {
 				Product product = productService.getById(employeeproductDto.getProductId());
@@ -67,12 +65,11 @@ public class EmployeeProductController {
 
 				totalProducts += 1;
 				totalPrice += product.getPoints();
-				newpoints=oldpoints-totalPrice;
-				
+				newpoints = oldpoints - totalPrice;
+
 				employee.setPointsBalance(newpoints);
 				employeeProductService.insert(employeeProduct);
 			}
-			
 
 			Map<String, Object> response = new HashMap<>();
 
@@ -85,7 +82,7 @@ public class EmployeeProductController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/getone/{id}")
 	public ResponseEntity<?> getById(@PathVariable("id") int id) {
 
@@ -97,33 +94,17 @@ public class EmployeeProductController {
 		}
 
 	}
-	
-	
+
 	@DeleteMapping("/delete/{cartid}")
-	public ResponseEntity<?> DeleteCartById(@PathVariable("cartid") int cartid)
-	{
+	public ResponseEntity<?> DeleteCartById(@PathVariable("cartid") int cartid) {
 		try {
-			EmployeeProduct employeeProduct=employeeProductService.getById(cartid);
-		employeeProductService.DeleteCartById(employeeProduct);
-		return ResponseEntity.ok().body("record deleted successfully");
-	}
-	catch(Exception e)
-		{
-		return ResponseEntity.badRequest().body(e.getMessage());
+			EmployeeProduct employeeProduct = employeeProductService.getById(cartid);
+			employeeProductService.DeleteCartById(employeeProduct);
+			return ResponseEntity.ok().body("record deleted successfully");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-	
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

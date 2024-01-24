@@ -40,16 +40,15 @@ import com.springboot.main.service.UserService;
 
 @RestController
 @RequestMapping("/employees")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = { "http://localhost:3000" })
 public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-	
+
 	@Autowired
 	private EmployeeHistoryService employeeHistoryService;
 
-	
 	@Autowired
 	private ManagerService managerService;
 
@@ -72,7 +71,8 @@ public class EmployeeController {
 	private EmployeeProductService employeeProductService;
 
 	@PostMapping("/address/add/{hid}/{mid}")
-	public ResponseEntity<?> insertEmployee(@PathVariable("hid") int hid,@PathVariable("mid") int mid, @RequestBody Employee employee) {
+	public ResponseEntity<?> insertEmployee(@PathVariable("hid") int hid, @PathVariable("mid") int mid,
+			@RequestBody Employee employee) {
 		// save user info in db
 
 		try {
@@ -156,7 +156,8 @@ public class EmployeeController {
 	@PutMapping("/update/{id}")
 
 	// :update: which record to update? give me new value for update
-	public ResponseEntity<?> updateEmployee(@PathVariable("id") int id, @RequestBody EmployeeDto newEmployee) throws InvalidIdException {
+	public ResponseEntity<?> updateEmployee(@PathVariable("id") int id, @RequestBody EmployeeDto newEmployee)
+			throws InvalidIdException {
 		// validate id
 		Employee oldEmployee = employeeService.getEmployeeByUserId(id);
 		if (newEmployee.getName() != null)
@@ -202,8 +203,7 @@ public class EmployeeController {
 
 	@GetMapping("/purchasedproducts/all/{eid}")
 	public List<EmployeeProduct> getProductsByEmployeeByUserId(@PathVariable("eid") int eid) {
-  
-		
+
 		return employeeService.getPurchasedProductsByEmployee(eid);
 
 	}
@@ -221,66 +221,46 @@ public class EmployeeController {
 		}
 
 	}
-	
-	
+
 	@GetMapping("/{date}")
-	public List<Employee> getEmployeesByDateOfPurchase(@PathVariable("date") LocalDate date){
-	return employeeService.getEmployeesByDateOfPurchase(date);
-	
+	public List<Employee> getEmployeesByDateOfPurchase(@PathVariable("date") LocalDate date) {
+		return employeeService.getEmployeesByDateOfPurchase(date);
+
 	}
-	
-	
 
 	@GetMapping("/leaderboard")
-	public List<Employee> getEmployeesByPointsBalance(){
-	return employeeService.getEmployeesByPointsBalance();
-	
+	public List<Employee> getEmployeesByPointsBalance() {
+		return employeeService.getEmployeesByPointsBalance();
+
 	}
-	
-	
+
 	@GetMapping("user/{uid}")
 	public Employee getEmployeeByUserId(@PathVariable("uid") int uid) {
 		return employeeService.getEmployeeByUserId(uid);
 	}
-	
-	
+
 	@GetMapping("/all/withoutThisUserId/{uid}")
-	public List<Employee> getEmployeesWithoutThisUserId(@PathVariable("uid") int uid){
+	public List<Employee> getEmployeesWithoutThisUserId(@PathVariable("uid") int uid) {
 		return employeeService.getEmployeesWithoutThisUserId(uid);
 	}
-	
-	
-	@GetMapping("all/history/{uid}")
-	public List<EmployeeHistory> getTransactions(@PathVariable("uid") int uid){
-		
-		
-		return employeeService.getTransactions(uid);
-		
-		
-	}
-	
-	@DeleteMapping("history/delete/{historyId}")
-	public ResponseEntity<?> DeleteHistoryById(@PathVariable("historyId") int historyId)
-	{
-		try {
-		EmployeeHistory employeeHistory=employeeHistoryService.getById(historyId);
-		employeeHistoryService.DeleteHistoryById(employeeHistory);
-		return ResponseEntity.ok().body("record deleted successfully");
-	}
-	catch(Exception e)
-		{
-		return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	
-	}
-	
-	
 
-	
-	
-	
-	
-	
-	
+	@GetMapping("all/history/{uid}")
+	public List<EmployeeHistory> getTransactions(@PathVariable("uid") int uid) {
+
+		return employeeService.getTransactions(uid);
+
+	}
+
+	@DeleteMapping("history/delete/{historyId}")
+	public ResponseEntity<?> DeleteHistoryById(@PathVariable("historyId") int historyId) {
+		try {
+			EmployeeHistory employeeHistory = employeeHistoryService.getById(historyId);
+			employeeHistoryService.DeleteHistoryById(employeeHistory);
+			return ResponseEntity.ok().body("record deleted successfully");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
+	}
 
 }
